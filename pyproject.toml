@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "causal-digital-twin-mci"
+version = "0.1.0"
+description = "Causal Digital Twin for MCI Prevention using Missingness-Aware Causal Forests"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [
+    {name = "PESU-RF Team", email = "team@pesu.pes.edu"},
+]
+keywords = ["causal-inference", "digital-twin", "MCI", "dementia", "edge-deployment"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Healthcare Industry",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Medical Science Apps.",
+]
+
+[project.urls]
+Homepage = "https://github.com/shiri-09/causal-digital-twin-iisc"
+Repository = "https://github.com/shiri-09/causal-digital-twin-iisc"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_functions = "test_*"
+addopts = "-v --tb=short"

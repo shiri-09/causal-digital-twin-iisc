@@ -1,0 +1,35 @@
+# Core ML
+numpy>=1.24.0
+pandas>=2.0.0
+scipy>=1.11.0
+scikit-learn>=1.3.0
+
+# Causal Inference
+econml>=0.15.0
+dowhy>=0.11.0
+
+# Gradient Boosting
+lightgbm>=4.0.0
+
+# ONNX Deployment
+onnx>=1.15.0
+onnxruntime>=1.17.0
+skl2onnx>=1.16.0
+
+# Dashboard
+flask>=3.0.0
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.13.0
+
+# Config
+pyyaml>=6.0
+
+# Testing
+pytest>=7.4.0
+pytest-cov>=4.1.0
+
+# Utilities
+tqdm>=4.65.0
+joblib>=1.3.0
