@@ -49,3 +49,5 @@ extract*.py
 extract*.ps1
 proposal_text.txt
 proposal_full_extract.txt
+
+data/cache/
