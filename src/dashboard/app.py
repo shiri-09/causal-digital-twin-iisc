@@ -1,13 +1,15 @@
 """
 Clinician Dashboard — Flask Backend
 
-Serves the touch-optimized clinician interface for counterfactual
-therapy recommendations. Designed for 7" touchscreen (800×480).
+Serves the landing page + touch-optimized clinician interface for
+counterfactual therapy recommendations.
 
 Endpoints:
-    GET  /           → Dashboard UI
-    POST /predict     → Patient risk + counterfactual predictions
-    GET  /health      → Health check
+    GET  /           → Landing page
+    GET  /dashboard  → Clinician dashboard UI
+    POST /predict    → Patient risk + counterfactual predictions
+    GET  /health     → Health check
+    GET  /demo-patient → Demo patient data
 """
 
 import numpy as np
@@ -40,6 +42,12 @@ def get_engine() -> InferenceEngine:
 
 
 @app.route('/')
+def landing():
+    """Serve the landing page."""
+    return render_template('landing.html')
+
+
+@app.route('/dashboard')
 def dashboard():
     """Serve the clinician dashboard."""
     return render_template('index.html')
@@ -60,28 +68,10 @@ def predict():
         "diastolic_bp": 88,
         "ldl": 135,
         "physical_activity_min_week": 90,
-        "gait_speed": 0.85,        # or null if missing
-        "oct_rnfl_thickness": null, # or null if missing
+        "gait_speed": 0.85,
+        "oct_rnfl_thickness": null,
         "mmse_score": 25,
         "hrv_sdnn": 38
-    }
-    
-    Returns:
-    {
-        "baseline_risk": 0.34,
-        "interventions": [
-            {
-                "name": "Lower HbA1c by 1%",
-                "treatment": "hba1c_reduced",
-                "new_risk": 0.22,
-                "risk_reduction": 0.12,
-                "e_value": 3.1,
-                "confidence": "high"
-            },
-            ...
-        ],
-        "combined_risk": 0.18,
-        "inference_time_ms": 8.2
     }
     """
     try:
@@ -125,7 +115,8 @@ def run_dashboard(host: str = '0.0.0.0', port: int = 5000, debug: bool = False):
     """Start the dashboard server."""
     print(f"\n{'='*60}")
     print(f"  Causal Digital Twin — Clinician Dashboard")
-    print(f"  http://{host}:{port}")
+    print(f"  Landing:   http://{host}:{port}/")
+    print(f"  Dashboard: http://{host}:{port}/dashboard")
     print(f"{'='*60}\n")
     app.run(host=host, port=port, debug=debug)
 
