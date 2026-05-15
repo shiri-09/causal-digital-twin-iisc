@@ -1,0 +1,75 @@
+# Causal Digital Twin — Configuration
+# =====================================
+
+data:
+  n_samples: 6000          # Synthetic patients (matches SANSCOG V1 ~6102)
+  seed: 42
+  train_frac: 0.8
+  val_frac: 0.1
+  test_frac: 0.1
+  
+  # Missingness rates (MNAR)
+  missingness:
+    oct_rnfl_thickness: 0.41
+    gait_speed: 0.28
+    mmse_score: 0.15
+    hrv_sdnn: 0.12
+
+model:
+  macf:
+    n_trees: 2000           # Proposal target (reduce for dev)
+    min_leaf_size: 20
+    max_depth: 8
+    honesty_fraction: 0.5
+    subsample_fraction: 0.5
+    
+  nuisance:
+    n_folds: 5              # Cross-fitting folds
+    n_estimators: 300
+    max_depth: 6
+    learning_rate: 0.05
+    
+  risk_predictor:
+    n_estimators: 500
+    max_depth: 6
+    learning_rate: 0.05
+
+evaluation:
+  targets:
+    pehe: 0.08              # Maximum PEHE on synthetic benchmark
+    auroc: 0.78             # Minimum AUROC for risk prediction
+    coverage: 0.90          # Minimum CI coverage
+    e_value: 2.0            # Minimum E-value
+    inference_p95_ms: 10    # Maximum p95 inference time (ms)
+    workup_ms: 100          # Maximum full workup time (ms)
+
+deployment:
+  output_dir: "models"
+  quantized_dir: "models/quantized"
+  
+dashboard:
+  host: "0.0.0.0"
+  port: 5000
+  debug: false
+
+# Treatments
+treatments:
+  - name: hba1c_reduced
+    display: "Lower HbA1c by 1%"
+    icon: "🩸"
+    category: Metabolic
+    
+  - name: bp_managed
+    display: "Manage BP to <130/80"
+    icon: "💊"
+    category: Cardiovascular
+    
+  - name: activity_increased
+    display: "Increase activity to 300 min/wk"
+    icon: "🏃"
+    category: Lifestyle
+    
+  - name: ldl_reduced
+    display: "Reduce LDL by 20 mg/dL"
+    icon: "🫀"
+    category: Cardiovascular
