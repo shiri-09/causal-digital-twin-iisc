@@ -104,31 +104,40 @@ python -m src.dashboard.app
 ## 📁 Project Structure
 
 ```
-src/
-├── data/                 # Data generators and loaders
-│   ├── synthetic_mci.py  # SANSCOG-like synthetic data
-│   ├── ihdp_loader.py    # IHDP benchmark loader
-│   ├── preprocessing.py  # Feature engineering
-│   └── missing_indicators.py
-├── models/               # Core ML models
-│   ├── macf.py           # Missingness-Aware Causal Forest
-│   ├── honest_tree.py    # Honest splitting base
-│   ├── dml_nuisance.py   # Double ML estimation
-│   └── risk_predictor.py # LightGBM baseline
-├── pipeline/             # Training & evaluation
-│   ├── train.py          # Full training orchestrator
-│   ├── evaluate.py       # PEHE, AUROC, coverage
-│   ├── e_value.py        # E-value sensitivity
-│   └── negative_controls.py
-├── deployment/           # Edge deployment
-│   ├── onnx_export.py    # Model → ONNX
-│   └── quantize.py       # int8 quantization
-├── dashboard/            # Clinician-facing UI
-│   ├── app.py            # Flask backend
-│   ├── inference.py      # ONNX runtime inference
-│   ├── templates/        # HTML
-│   └── static/           # CSS + JS
-└── visualization/        # Plotting utilities
+├── configs/
+│   └── default.yaml          # Pipeline hyperparameters and targets
+├── docs/
+│   └── architecture.md       # System architecture documentation
+├── src/
+│   ├── config.py             # Centralized YAML config loader
+│   ├── data/                 # Data generators and loaders
+│   │   ├── synthetic_mci.py  # SANSCOG-like synthetic data
+│   │   ├── ihdp_loader.py    # IHDP benchmark loader
+│   │   ├── preprocessing.py  # Feature engineering & standardization
+│   │   └── missing_indicators.py  # Shared missingness utilities
+│   ├── models/               # Core ML models
+│   │   ├── macf.py           # Missingness-Aware Causal Forest
+│   │   ├── honest_tree.py    # Honest splitting base
+│   │   ├── dml_nuisance.py   # Double ML estimation
+│   │   └── risk_predictor.py # LightGBM baseline
+│   ├── pipeline/             # Training & evaluation
+│   │   ├── train.py          # Full training orchestrator
+│   │   ├── evaluate.py       # PEHE, AUROC, coverage
+│   │   ├── e_value.py        # E-value sensitivity
+│   │   └── negative_controls.py  # Placebo/shuffle validation
+│   ├── deployment/           # Edge deployment
+│   │   ├── onnx_export.py    # Model → JSON export
+│   │   └── quantize.py       # int8 quantization for RPi4
+│   ├── dashboard/            # Clinician-facing UI
+│   │   ├── app.py            # Flask backend
+│   │   ├── inference.py      # Real-time inference engine
+│   │   ├── templates/        # HTML (touch-optimized)
+│   │   └── static/           # CSS + JS
+│   └── visualization/        # Plotting utilities
+├── tests/
+│   ├── test_data.py          # Data generation & IHDP tests
+│   └── test_macf.py          # MACF algorithm tests
+└── demo.py                   # One-command pipeline runner
 ```
 
 ## 📈 Validation Metrics

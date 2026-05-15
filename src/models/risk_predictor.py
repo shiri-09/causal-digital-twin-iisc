@@ -18,21 +18,14 @@ import joblib
 
 
 def _add_missing_indicators(X: np.ndarray) -> np.ndarray:
-    """Add binary missing indicators and fill NaN with median."""
-    n, p = X.shape
-    missing_mask = np.isnan(X)
-    miss_rates = missing_mask.mean(axis=0)
-    high_miss_cols = np.where(miss_rates > 0.05)[0]
-    indicators = missing_mask[:, high_miss_cols].astype(np.float64)
-    
-    X_filled = X.copy()
-    medians = np.nanmedian(X_filled, axis=0)
-    for col in range(p):
-        nan_mask = np.isnan(X_filled[:, col])
-        if nan_mask.any():
-            X_filled[nan_mask, col] = medians[col]
-    
-    return np.hstack([X_filled, indicators]), medians
+    """
+    Add binary missing indicators and fill NaN with median.
+
+    Delegates to the shared implementation in src.data.missing_indicators.
+    """
+    from src.data.missing_indicators import add_missing_indicators
+    X_augmented, medians = add_missing_indicators(X, threshold=0.05)
+    return X_augmented, medians
 
 
 class MCIRiskPredictor:

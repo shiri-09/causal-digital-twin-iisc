@@ -73,29 +73,11 @@ def _add_missing_indicators(X: np.ndarray) -> np.ndarray:
     
     This is the preprocessing step described in the proposal:
     "MACF receives raw missing values plus explicit binary missing indicators"
+    
+    Delegates to the shared implementation in src.data.missing_indicators.
     """
-    n, p = X.shape
-    missing_mask = np.isnan(X)
-    
-    # Identify features with >5% missingness
-    miss_rates = missing_mask.mean(axis=0)
-    high_miss_cols = np.where(miss_rates > 0.05)[0]
-    
-    # Create missing indicators
-    indicators = missing_mask[:, high_miss_cols].astype(np.float64)
-    
-    # Fill NaN with column median (for nuisance models only)
-    X_filled = X.copy()
-    for col in range(p):
-        col_vals = X_filled[:, col]
-        nan_mask = np.isnan(col_vals)
-        if nan_mask.any():
-            median_val = np.nanmedian(col_vals)
-            col_vals[nan_mask] = median_val
-    
-    # Concatenate features + missing indicators
-    X_augmented = np.hstack([X_filled, indicators])
-    
+    from src.data.missing_indicators import add_missing_indicators
+    X_augmented, _ = add_missing_indicators(X, threshold=0.05)
     return X_augmented
 
 
