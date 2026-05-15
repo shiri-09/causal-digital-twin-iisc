@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=800, initial-scale=1.0">
+    <title>Causal Digital Twin — MCI Prevention</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">🧠</div>
+            <div>
+                <h1>Causal Digital Twin</h1>
+                <p class="subtitle">MCI Prevention — Counterfactual Therapy Simulator</p>
+            </div>
+        </div>
+        <div class="header-right">
+            <span class="badge badge-live">● LIVE</span>
+            <span class="badge badge-edge">Edge Device</span>
+        </div>
+    </header>
+
+    <main class="main-grid">
+        <!-- Left Panel: Patient Input -->
+        <section class="panel panel-input">
+            <div class="panel-header">
+                <h2>👤 Patient Profile</h2>
+                <button class="btn btn-sm btn-ghost" onclick="loadDemoPatient()">Load Demo</button>
+            </div>
+
+            <form id="patientForm" onsubmit="runPrediction(event)">
+                <div class="form-grid">
+                    <!-- Demographics -->
+                    <div class="form-section">
+                        <h3>Demographics</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="age">Age</label>
+                                <input type="number" id="age" name="age" min="45" max="90" placeholder="62" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="sex">Sex</label>
+                                <select id="sex" name="sex" required>
+                                    <option value="">—</option>
+                                    <option value="0">Male</option>
+                                    <option value="1">Female</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="education_years">Education (yrs)</label>
+                                <input type="number" id="education_years" name="education_years" min="0" max="20" placeholder="8">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Clinical -->
+                    <div class="form-section">
+                        <h3>Clinical Markers</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="hba1c">HbA1c (%)</label>
+                                <input type="number" id="hba1c" name="hba1c" step="0.1" min="4" max="14" placeholder="6.2">
+                            </div>
+                            <div class="form-group">
+                                <label for="systolic_bp">Systolic BP</label>
+                                <input type="number" id="systolic_bp" name="systolic_bp" min="90" max="220" placeholder="138">
+                            </div>
+                            <div class="form-group">
+                                <label for="diastolic_bp">Diastolic BP</label>
+                                <input type="number" id="diastolic_bp" name="diastolic_bp" min="50" max="130" placeholder="82">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="ldl">LDL (mg/dL)</label>
+                                <input type="number" id="ldl" name="ldl" min="40" max="250" placeholder="120">
+                            </div>
+                            <div class="form-group">
+                                <label for="physical_activity_min_week">Activity (min/wk)</label>
+                                <input type="number" id="physical_activity_min_week" name="physical_activity_min_week" min="0" max="600" placeholder="120">
+                            </div>
+                            <div class="form-group">
+                                <label for="mmse_score">MMSE Score</label>
+                                <input type="number" id="mmse_score" name="mmse_score" min="10" max="30" placeholder="26">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Optional (may be missing) -->
+                    <div class="form-section">
+                        <h3>Optional <span class="hint">(leave blank if unavailable)</span></h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="gait_speed">Gait Speed (m/s)</label>
+                                <input type="number" id="gait_speed" name="gait_speed" step="0.01" min="0.2" max="1.8" placeholder="—">
+                            </div>
+                            <div class="form-group">
+                                <label for="oct_rnfl_thickness">OCT RNFL (μm)</label>
+                                <input type="number" id="oct_rnfl_thickness" name="oct_rnfl_thickness" min="50" max="140" placeholder="—">
+                            </div>
+                            <div class="form-group">
+                                <label for="hrv_sdnn">HRV SDNN (ms)</label>
+                                <input type="number" id="hrv_sdnn" name="hrv_sdnn" min="5" max="120" placeholder="—">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full" id="predictBtn">
+                    <span class="btn-text">🔬 Run Counterfactual Analysis</span>
+                    <span class="btn-loading" style="display:none">⏳ Analyzing...</span>
+                </button>
+            </form>
+        </section>
+
+        <!-- Right Panel: Results -->
+        <section class="panel panel-results" id="resultsPanel">
+            <div class="panel-header">
+                <h2>📊 Treatment Recommendations</h2>
+                <span id="inferenceTime" class="badge badge-time"></span>
+            </div>
+
+            <!-- Placeholder -->
+            <div id="placeholder" class="placeholder">
+                <div class="placeholder-icon">🧬</div>
+                <p>Enter patient data and click <strong>Run Counterfactual Analysis</strong> to see personalized treatment recommendations.</p>
+                <p class="placeholder-sub">The model simulates "what if" interventions and ranks them by expected MCI risk reduction.</p>
+            </div>
+
+            <!-- Results (hidden initially) -->
+            <div id="results" style="display:none">
+                <!-- Baseline Risk -->
+                <div class="risk-card" id="baselineCard">
+                    <div class="risk-label">2-Year MCI Risk (Baseline)</div>
+                    <div class="risk-value" id="baselineRisk">—</div>
+                    <div class="risk-bar-container">
+                        <div class="risk-bar" id="baselineBar"></div>
+                    </div>
+                </div>
+
+                <!-- Interventions -->
+                <div id="interventionsList" class="interventions-list">
+                    <!-- Filled dynamically -->
+                </div>
+
+                <!-- Combined -->
+                <div class="combined-card" id="combinedCard">
+                    <div class="combined-header">
+                        <span>🔗 Combined Intervention (All Four)</span>
+                    </div>
+                    <div class="combined-body">
+                        <div class="combined-risk">
+                            <span class="combined-label">New Risk:</span>
+                            <span class="combined-value" id="combinedRisk">—</span>
+                        </div>
+                        <div class="combined-reduction" id="combinedReduction">—</div>
+                    </div>
+                </div>
+
+                <!-- Disclaimer -->
+                <div class="disclaimer">
+                    ⚠️ Causal estimates from observational data. E-values indicate robustness to unmeasured confounding.
+                    Always apply clinical judgment. Model validated on IHDP benchmark (PEHE &lt; 0.08).
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <span>IISc CBR AI Challenge 2026</span>
+        <span>•</span>
+        <span>Team PESU-RF — PES University</span>
+        <span>•</span>
+        <span>Edge Inference: Raspberry Pi 4</span>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>
