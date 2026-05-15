@@ -253,7 +253,7 @@ body {
   box-shadow: 0 8px 28px rgba(18, 184, 134, 0.4);
 }
 .btn-primary:active { transform: translateY(0); }
-.btn-full { width: 100%; }
+.btn-full { width: 100%; margin-top: 24px; }
 .btn-sm { padding: 6px 14px; font-size: 12px; }
 .btn-ghost {
   background: rgba(10, 110, 189, 0.08);
