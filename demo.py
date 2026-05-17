@@ -23,6 +23,10 @@ import time
 import argparse
 import numpy as np
 
+# Fix Windows console encoding for Unicode output (emojis, box chars)
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+
 # Ensure src is importable
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
