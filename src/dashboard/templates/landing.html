@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CausalTwin — AI-Powered Cognitive Decline Prevention</title>
+  <meta name="description" content="Predicting MCI before it happens using real NHANES data, causal forests, and edge AI.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+</head>
+<body>
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="container">
+    <a href="/" class="nav-logo">
+      <div class="nav-logo-icon">C</div>
+      <div class="nav-logo-text">Causal<span>Twin</span></div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#features">Technology</a></li>
+      <li><a href="#showcase">Dashboard</a></li>
+      <li><a href="#metrics">Results</a></li>
+      <li><a href="#pipeline">Pipeline</a></li>
+      <li><a href="#team">Team</a></li>
+    </ul>
+    <a href="/dashboard" class="nav-cta">Live Dashboard &rarr;</a>
+    <button class="nav-hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-particles" id="particles"></div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge"><span class="dot"></span> IISc CBR AI Challenge 2026</div>
+      <h1>Predicting Cognitive Decline <span class="highlight">Before It Happens</span></h1>
+      <p class="hero-sub">The first causal digital twin for MCI prevention — powered by real NHANES clinical data, missingness-aware causal forests, and sub-millisecond edge inference on Raspberry Pi.</p>
+      <div class="hero-actions">
+        <a href="/dashboard" class="btn-primary">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Try Live Demo
+        </a>
+        <a href="https://github.com/shiri-09/causal-digital-twin-iisc" class="btn-secondary" target="_blank">
+          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-glow"></div>
+      <img src="{{ url_for('static', filename='images/hero-brain.png') }}" alt="AI Brain" class="hero-img">
+    </div>
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<section class="trust-bar">
+  <div class="container">
+    <div class="trust-item"><div class="trust-icon">📊</div><div><div class="trust-value">3,474</div><div class="trust-label">Real NHANES Patients</div></div></div>
+    <div class="trust-item"><div class="trust-icon">⚡</div><div><div class="trust-value">&lt;1ms</div><div class="trust-label">Edge Inference</div></div></div>
+    <div class="trust-item"><div class="trust-icon">🎯</div><div><div class="trust-value">4</div><div class="trust-label">Causal Interventions</div></div></div>
+    <div class="trust-item"><div class="trust-icon">🛡️</div><div><div class="trust-value">E &gt; 2.0</div><div class="trust-label">Sensitivity Validated</div></div></div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">Core Technology</div>
+      <h2 class="section-title">From Real Data to <span class="gradient-text">Real Impact</span></h2>
+      <p class="section-sub">Every component validated against real clinical benchmarks — no synthetic shortcuts.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal"><div class="feature-icon">🏥</div><h3>Real NHANES Data</h3><p>3,474 adults aged 45+ from CDC NHANES 2017-18. HbA1c, blood pressure, cholesterol — all real.</p><span class="feature-tag">7 CDC XPT Files</span></div>
+      <div class="feature-card reveal"><div class="feature-icon">🌳</div><h3>Causal Forest (MACF)</h3><p>Missingness-Aware Causal Forest with honest splitting. Handles MNAR patterns natively.</p><span class="feature-tag">NaN-Aware Splits</span></div>
+      <div class="feature-card reveal"><div class="feature-icon">📱</div><h3>Edge Deployment</h3><p>ONNX-exported, int8-quantized models on Raspberry Pi 4. 108KB footprint, sub-ms inference.</p><span class="feature-tag">108KB Model</span></div>
+      <div class="feature-card reveal"><div class="feature-icon">📋</div><h3>Clinician Dashboard</h3><p>Glassmorphism UI showing baseline risk, 4 counterfactual interventions, and E-value scores.</p><span class="feature-tag">Real-time</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- SHOWCASE -->
+<section class="section showcase" id="showcase">
+  <div class="container">
+    <div class="reveal"><img src="{{ url_for('static', filename='images/dashboard.png') }}" alt="Dashboard" class="showcase-img"></div>
+    <div class="reveal">
+      <div class="section-label" style="color:var(--accent)">Live Dashboard</div>
+      <h2>Counterfactual Interventions at a Glance</h2>
+      <p>For each patient, the digital twin simulates four evidence-based interventions and ranks them by causal effect size.</p>
+      <ul class="showcase-list">
+        <li><span class="check">✓</span> HbA1c reduction — Xue et al. 2019</li>
+        <li><span class="check">✓</span> BP management — SPRINT-MIND 2019</li>
+        <li><span class="check">✓</span> Physical activity — Livingston 2020</li>
+        <li><span class="check">✓</span> LDL reduction — Zhu et al. 2021</li>
+      </ul>
+      <a href="/dashboard" class="btn-primary" style="margin-top:24px">Open Dashboard &rarr;</a>
+    </div>
+  </div>
+</section>
+
+<!-- METRICS -->
+<section class="section" id="metrics">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">Validated Results</div>
+      <h2 class="section-title">Benchmark <span class="gradient-text">Performance</span></h2>
+    </div>
+    <div class="metrics-grid">
+      <div class="metric-card reveal"><div class="metric-number" data-target="747">0</div><div class="metric-label">Real IHDP Subjects</div></div>
+      <div class="metric-card reveal"><div class="metric-number" data-target="0.84" data-decimals="2">0</div><div class="metric-label">PEHE Score</div></div>
+      <div class="metric-card reveal"><div class="metric-number" data-target="108" data-suffix="KB">0</div><div class="metric-label">Model Size</div></div>
+      <div class="metric-card reveal"><div class="metric-number" data-target="0.6" data-suffix="ms" data-decimals="1">0</div><div class="metric-label">Inference Latency</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PIPELINE -->
+<section class="section" id="pipeline" style="background:#F1F5F9">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">Architecture</div>
+      <h2 class="section-title">End-to-End <span class="gradient-text">Pipeline</span></h2>
+    </div>
+    <div class="pipeline reveal">
+      <div class="pipeline-step"><div class="pipeline-num">1</div><h4>NHANES Ingestion</h4><p>7 CDC XPT files</p></div>
+      <div class="pipeline-step"><div class="pipeline-num">2</div><h4>DML Cross-Fitting</h4><p>5-fold nuisance</p></div>
+      <div class="pipeline-step"><div class="pipeline-num">3</div><h4>MACF Training</h4><p>Honest splits</p></div>
+      <div class="pipeline-step"><div class="pipeline-num">4</div><h4>ONNX Export</h4><p>int8 quantization</p></div>
+      <div class="pipeline-step"><div class="pipeline-num">5</div><h4>Edge Inference</h4><p>Raspberry Pi 4</p></div>
+    </div>
+    <div class="arch-visual reveal" style="margin-top:48px"><img src="{{ url_for('static', filename='images/causal-graph.png') }}" alt="Causal Graph" style="max-height:400px;object-fit:contain"></div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="section" id="team">
+  <div class="container">
+    <div class="team-grid">
+      <div class="reveal"><img src="{{ url_for('static', filename='images/team.png') }}" alt="Team" class="team-img"></div>
+      <div class="reveal">
+        <div class="section-label">The Team</div>
+        <h2 class="section-title">Built by Researchers, <span class="gradient-text">For Clinicians</span></h2>
+        <p style="color:var(--text-muted);margin-bottom:20px">A multidisciplinary team combining causal inference, edge computing, and clinical neuroscience expertise. IISc CBR AI Challenge 2026.</p>
+        <div class="team-badges">
+          <span class="team-badge">Causal Inference</span><span class="team-badge">Edge AI</span><span class="team-badge">Clinical ML</span><span class="team-badge">Python</span><span class="team-badge">LightGBM</span><span class="team-badge">Flask</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="cta">
+  <div class="container reveal">
+    <h2>Ready to Explore the <span class="gradient-text">Digital Twin</span>?</h2>
+    <p>Open-source, reproducible, and ready for clinical validation.</p>
+    <div class="cta-buttons">
+      <a href="/dashboard" class="btn-primary">Try the Dashboard &rarr;</a>
+      <a href="https://github.com/shiri-09/causal-digital-twin-iisc" class="btn-secondary" target="_blank">Star on GitHub</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer-section">
+  <div class="container">
+    <div class="footer-bottom">
+      <span>&copy; 2026 CausalTwin. IISc Centre for Brain Research AI Challenge.</span>
+      <span>Built with Python, LightGBM, and real data.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="{{ url_for('static', filename='js/landing.js') }}"></script>
+</body>
+</html>

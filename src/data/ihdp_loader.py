@@ -1,5 +1,5 @@
 """
-IHDP Benchmark Data Loader
+IHDP Benchmark Data Loader — REAL DATA
 
 Loads the REAL Infant Health and Development Program (IHDP) semi-synthetic dataset
 from the CEVAE repository (Louizos et al. 2017), the standard benchmark for
@@ -16,6 +16,7 @@ Dataset structure (per Hill 2011 simulation design):
 Source: https://github.com/AMLab-Amsterdam/CEVAE/tree/master/datasets/IHDP/csv
 """
 
+import os
 import numpy as np
 import pandas as pd
 from typing import Tuple, Optional, Dict
@@ -220,6 +221,32 @@ def load_multiple_ihdp_replications(
         except Exception as e:
             logger.warning(f"Failed to load replication {rep}: {e}")
     
+    return results
+
+    print(f"\n  Train: {len(train_idx)} subjects, Test: {len(test_idx)} subjects")
+    return result
+
+
+def load_multiple_realizations(
+    realizations: range = range(1, 11),
+) -> list:
+    """
+    Load multiple IHDP realizations for robust evaluation.
+
+    The standard practice is to evaluate across all 10 realizations
+    and report mean ± std of PEHE (Precision in Estimation of
+    Heterogeneous Effects).
+
+    Returns:
+        List of data dictionaries, one per realization.
+    """
+    results = []
+    for r in realizations:
+        try:
+            data = load_ihdp(realization=r)
+            results.append(data)
+        except Exception as e:
+            print(f"  Warning: Failed to load realization {r}: {e}")
     return results
 
 

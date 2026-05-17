@@ -23,7 +23,7 @@ from src.data.synthetic_mci import (
     get_treatment_names,
     get_feature_names,
 )
-from src.data.ihdp_loader import load_ihdp_data
+from src.data.ihdp_loader import load_ihdp_for_causal_forest
 from src.models.macf import MissingnessAwareCausalForest
 from src.models.dml_nuisance import fit_all_nuisance_models
 from src.models.risk_predictor import MCIRiskPredictor
@@ -240,7 +240,7 @@ def train_full_pipeline(
         print("STEP 7: IHDP Benchmark Validation")
         print("=" * 60)
     
-    ihdp_data = load_ihdp_data(seed=seed)
+    ihdp_data = load_ihdp_for_causal_forest(realization=1, seed=seed)
     
     macf_ihdp = MissingnessAwareCausalForest(
         n_trees=min(200, n_trees),
