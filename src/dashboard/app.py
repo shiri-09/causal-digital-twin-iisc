@@ -124,7 +124,7 @@ def demo_patient():
 def run_dashboard(host: str = '0.0.0.0', port: int = 5000, debug: bool = False):
     """Start the dashboard server."""
     print(f"\n{'='*60}")
-    print(f"  Causal Digital Twin — Clinician Dashboard")
+    print(f"  🧠 MindBridge — Clinician Dashboard")
     print(f"  http://{host}:{port}")
     print(f"{'='*60}\n")
     app.run(host=host, port=port, debug=debug)

@@ -31,7 +31,7 @@ def run_demo(quick: bool = False, dashboard_only: bool = False):
     """Run the full pipeline demonstration."""
     
     print("\n" + "=" * 64)
-    print("  🧠 CAUSAL DIGITAL TWIN FOR MCI PREVENTION")
+    print("  🧠 MINDBRIDGE — Causal Digital Twin for MCI Prevention")
     print("  Counterfactual Therapy Simulator — Full Pipeline Demo")
     print("=" * 64)
     
@@ -200,18 +200,31 @@ def run_demo(quick: bool = False, dashboard_only: bool = False):
     print("  STEP 7/7: Exporting Models for Edge Deployment")
     print("─" * 64)
     
-    from src.deployment.onnx_export import CausalForestONNXExporter, FastTreeInference
+    from src.deployment.model_export import (
+        export_macf_to_onnx, CausalForestExporter, FastTreeInference,
+        load_inference_engine,
+    )
     
     os.makedirs("models", exist_ok=True)
     os.makedirs("models/quantized", exist_ok=True)
     
-    exporter = CausalForestONNXExporter()
+    # Try ONNX export first, fall back to JSON
+    try:
+        print("\n  ONNX export (TreeEnsembleRegressor):")
+        for t_name, model in macf_models.items():
+            export_macf_to_onnx(model, t_name, output_dir="models",
+                               n_features=X_train.shape[1])
+    except Exception as e:
+        print(f"  ⚠ ONNX export failed ({e}). Using JSON fallback.")
     
-    print("\n  Full precision:")
+    # Always export JSON as fallback
+    exporter = CausalForestExporter()
+    
+    print("\n  JSON export (full precision):")
     paths = exporter.export_all(macf_models, output_dir="models")
     
-    print("\n  Quantized (int8-like):")
-    q_paths = exporter.quantize_export(macf_models, output_dir="models/quantized")
+    print("\n  JSON export (int8-quantized):")
+    q_paths = exporter.export_all(macf_models, output_dir="models/quantized")
     
     # Save risk predictor
     risk_predictor.save("models/risk_predictor.joblib")

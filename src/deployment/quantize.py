@@ -60,7 +60,7 @@ def quantize_tree(tree_dict: dict, n_bits: int = 8) -> dict:
     Recursively quantize a serialized tree dictionary.
 
     Args:
-        tree_dict: Serialized tree from CausalForestONNXExporter
+        tree_dict: Serialized tree from CausalForestExporter
         n_bits: Quantization bit depth
 
     Returns:

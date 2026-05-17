@@ -1,5 +1,5 @@
 """
-Inference Engine for Dashboard
+MindBridge Inference Engine
 
 Loads trained models and provides real-time counterfactual predictions
 for individual patients. Designed for <10ms per prediction.
@@ -75,19 +75,68 @@ class InferenceEngine:
     
     def _load_exported_models(self):
         """Load exported JSON models from disk."""
-        from src.deployment.onnx_export import FastTreeInference
+        from src.deployment.model_export import FastTreeInference, load_inference_engine
         
         model_dir = Path(self.model_dir)
         
-        # Try quantized first, then regular
+        # Try ONNX first, then quantized JSON, then regular JSON
         for t_name in TREATMENT_INFO.keys():
-            q_path = model_dir / 'quantized' / f'macf_{t_name}_q8.json'
-            r_path = model_dir / f'macf_{t_name}.json'
+            engine = load_inference_engine(str(model_dir), t_name)
+            if engine is not None:
+                self.macf_models[t_name] = engine
+        
+        # If no models found, auto-train a quick demo MACF
+        if not self.macf_models:
+            self._auto_train_demo()
+    
+    def _auto_train_demo(self):
+        """Auto-train a small MACF on synthetic data for live demo."""
+        try:
+            from src.data.synthetic_mci import generate_synthetic_mci_data
+            from src.models.macf import MissingnessAwareCausalForest
+            from src.deployment.model_export import CausalForestExporter, FastTreeInference
             
-            if q_path.exists():
-                self.macf_models[t_name] = FastTreeInference(str(q_path))
-            elif r_path.exists():
-                self.macf_models[t_name] = FastTreeInference(str(r_path))
+            print("  ⚡ No trained models found. Auto-training demo MACF...")
+            X, T, Y, tau, prob = generate_synthetic_mci_data(n_samples=300)
+            
+            for t_name in TREATMENT_INFO.keys():
+                if t_name in T.columns:
+                    macf = MissingnessAwareCausalForest(
+                        n_trees=30, max_depth=4, seed=42, n_jobs=1
+                    )
+                    macf.fit(X.values, Y, T[t_name].values, verbose=False)
+                    
+                    # Export to JSON and load inference engine
+                    os.makedirs("models", exist_ok=True)
+                    exporter = CausalForestExporter()
+                    path = exporter.export_macf(macf, t_name, "models")
+                    self.macf_models[t_name] = FastTreeInference(path)
+            
+            self._use_live = False
+            print(f"  ✓ Demo models trained: {list(self.macf_models.keys())}")
+        except Exception as e:
+            print(f"  ⚠ Auto-train failed: {e}. Using feature-based estimation.")
+    
+    def _estimate_tau_from_features(self, x: np.ndarray, t_name: str) -> float:
+        """
+        Estimate treatment effect from patient features when no model
+        is available. Uses domain knowledge from proposal literature.
+        """
+        age = x[0] if not np.isnan(x[0]) else 62
+        hba1c = x[3] if not np.isnan(x[3]) else 6.2
+        sbp = x[4] if not np.isnan(x[4]) else 138
+        activity = x[7] if not np.isnan(x[7]) else 120
+        
+        # Higher baseline → larger treatment effect (domain knowledge)
+        if t_name == 'hba1c_reduced':
+            return -0.02 * max(0, hba1c - 5.7)  # effect scales with HbA1c
+        elif t_name == 'bp_managed':
+            return -0.001 * max(0, sbp - 120)  # effect scales with BP
+        elif t_name == 'activity_increased':
+            return -0.0002 * max(0, 300 - activity)  # effect scales with inactivity
+        elif t_name == 'ldl_reduced':
+            return -0.03 - 0.001 * max(0, age - 60)  # slight age interaction
+        return -0.04
     
     def _patient_to_array(self, patient_data: Dict) -> np.ndarray:
         """Convert patient dict to feature array."""
@@ -164,14 +213,8 @@ class InferenceEngine:
                 else:
                     tau = float(model.predict_single(x))
             else:
-                # Fallback: use proposal estimates
-                fallback_effects = {
-                    'hba1c_reduced': -0.08,
-                    'bp_managed': -0.06,
-                    'activity_increased': -0.05,
-                    'ldl_reduced': -0.04,
-                }
-                tau = fallback_effects.get(t_name, -0.05)
+                # No model available — estimate from patient features
+                tau = self._estimate_tau_from_features(x, t_name)
             
             new_risk = max(0.01, min(0.99, baseline_risk + tau))
             risk_reduction = baseline_risk - new_risk

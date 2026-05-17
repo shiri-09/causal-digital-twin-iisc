@@ -1,5 +1,5 @@
 <p align="center">
-  <h1 align="center">🧠 Causal Digital Twin for MCI Prevention</h1>
+  <h1 align="center">🧠 MindBridge: Causal Digital Twin for MCI Prevention</h1>
   <p align="center">
     <em>A Counterfactual Therapy Simulator Using Missingness-Aware Causal Forests</em>
   </p>
@@ -80,7 +80,8 @@ The **Missingness-Aware Causal Forest** is our core algorithmic contribution:
 | **SANSCOG** | Primary training | n ≈ 6,102 (V1 baseline) |
 | **TLSA** | External validation only | n ≈ 1,449 (V3) |
 | **IHDP** | Causal benchmark (known τ) | n = 747 |
-| **ACTG-175** | Causal benchmark | n = 2,000 |
+| **ACTG-175** | Clinical RCT benchmark | n = 2,139 |
+| **News** | High-dimensional benchmark | n = 5,000 |
 
 > **Note:** Real SANSCOG/TLSA data is accessed only through CBR's secure infrastructure under DUA. This repository uses synthetic data that mirrors the SANSCOG feature structure for development and demonstration.
 
@@ -112,7 +113,10 @@ python -m src.dashboard.app
 │   ├── config.py             # Centralized YAML config loader
 │   ├── data/                 # Data generators and loaders
 │   │   ├── synthetic_mci.py  # SANSCOG-like synthetic data
-│   │   ├── ihdp_loader.py    # IHDP benchmark loader
+│   │   ├── ihdp_loader.py    # Real IHDP benchmark (CEVAE)
+│   │   ├── actg175_loader.py # ACTG-175 clinical trial (UCI)
+│   │   ├── news_loader.py    # News semi-synthetic benchmark
+│   │   ├── addi_harmonize.py # ADDI C-Surv harmonization schema
 │   │   ├── preprocessing.py  # Feature engineering & standardization
 │   │   └── missing_indicators.py  # Shared missingness utilities
 │   ├── models/               # Core ML models
@@ -126,7 +130,7 @@ python -m src.dashboard.app
 │   │   ├── e_value.py        # E-value sensitivity
 │   │   └── negative_controls.py  # Placebo/shuffle validation
 │   ├── deployment/           # Edge deployment
-│   │   ├── onnx_export.py    # Model → JSON export
+│   │   ├── model_export.py   # ONNX + JSON model export
 │   │   └── quantize.py       # int8 quantization for RPi4
 │   ├── dashboard/            # Clinician-facing UI
 │   │   ├── app.py            # Flask backend
