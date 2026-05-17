@@ -47,5 +47,13 @@ logs/
 *.tmp
 extract*.py
 extract*.ps1
+
+# Proposal & scratch files (keep local only)
 proposal_text.txt
 proposal_full_extract.txt
+proposal_extract.txt
+CBR_AI_*.docx
+*.docx
+
+# Cached benchmark data
+data/cache/
